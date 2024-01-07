@@ -7,9 +7,9 @@
 plot_agepyramide(
   age = create_data()$age,
   sex = create_data()$sex,
-  group = create_data()$group,
   agegroup = TRUE,
-  agegroup_size = 10
+  agegroup_size = 10,
+  filter_NA = TRUE
 )
 }
 \arguments{
@@ -17,11 +17,11 @@ plot_agepyramide(
 
 \item{sex}{A character vector of sexes.}
 
-\item{group}{A character vector of groups.}
+\item{agegroup}{A logical value indicating whether to group ages into chunks.}
 
-\item{agegroup}{A logical value indicating whether to group ages into chunks of 10 years.}
+\item{agegroup_size}{An integer value indicating the size of age groups. Defaults to 10.}
 
-\item{agegroup_size}{An integer value indicating the size of age groups.}
+\item{filter_NA}{An logical value indicating wether to exclude NA values. Defaults to TRUE.}
 }
 \value{
 A ggplot object.

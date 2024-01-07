@@ -37,7 +37,7 @@ create_data <- function(n = 100, create_errors = FALSE) {
     age <- sample(-5:140, n, replace = TRUE)
 
     # Randomly assign sex (Male, Female, NA, or Wrongentry)
-    sex <- sample(c("Male", "Female", NA, "Wrongentry"), n, replace = TRUE)
+    sex <- sample(c("Männlich", "Male", "F", "Female", NA, "Wrongentry"), n, replace = TRUE)
 
     # Assign a group (Group A, Group B, Group C, or NA)
     group <- sample(c("Group A", "Group B", "Group C", NA), n, replace = TRUE)
@@ -56,9 +56,9 @@ create_data <- function(n = 100, create_errors = FALSE) {
 #'
 #' @param age A numeric vector of ages.
 #' @param sex A character vector of sexes.
-#' @param group A character vector of groups.
-#' @param agegroup A logical value indicating whether to group ages into chunks of 10 years.
-#' @param agegroup_size An integer value indicating the size of age groups.
+#' @param agegroup A logical value indicating whether to group ages into chunks.
+#' @param agegroup_size An integer value indicating the size of age groups. Defaults to 10.
+#' @param filter_NA An logical value indicating wether to exclude NA values. Defaults to TRUE.
 #'
 #' @return A ggplot object.
 #'
@@ -72,40 +72,50 @@ create_data <- function(n = 100, create_errors = FALSE) {
 #' @export
 plot_agepyramide <- function(age = create_data()$age,
                              sex = create_data()$sex,
-                             group = NULL,
                              agegroup = TRUE,
-                             agegroup_size = 10) {
+                             agegroup_size = 10,
+                             filter_NA = TRUE) {
+
+
+
+  sex = ifelse(sex %in% c("Male",
+                          "male",
+                          "Männlich",
+                          "männlich",
+                          "Maennlich",
+                          "maennlich",
+                          "M",
+                          "m"), "Male", sex)
+
+  sex = ifelse(sex %in% c("Female",
+                          "female",
+                          "weiblich",
+                          "Weiblich",
+                          "W",
+                          "w",
+                          "F",
+                          "f"), "Female", sex)
+
+  sex = ifelse(sex %in% c("Male", "Female"), sex, NA)
 
 
   if(agegroup){
-    data <- data.frame(age, sex, group) %>%
+    data <- data.frame(age, sex) %>%
       mutate(agegroup = cut(age, breaks = seq(0, 100, by = agegroup_size), right = FALSE)) %>%
       count(sex, age = agegroup)
   }
 
   if(!agegroup){
-    data <- data.frame(age, sex, group) %>%
+    data <- data.frame(age, sex) %>%
       count(sex, age)
   }
 
 
-  sex = ifelse(sex %in% c("Male",
-                    "male",
-                    "Männlich",
-                    "männlich",
-                    "Maennlich",
-                    "maennlich",
-                    "M",
-                    "m"), "Male", sex)
-
-    sex = ifelse(sex %in% c("Female",
-                    "female",
-                    "weiblich",
-                    "Weiblich",
-                    "W",
-                    "w",
-                    "F",
-                    "f"), "Female", sex)
+  if(filter_NA){
+    data <- data %>%
+      dplyr::filter(!is.na(sex)) %>%
+      dplyr::filter(!is.na(age))
+  }
 
 
   ggplot(data) +
@@ -121,5 +131,6 @@ plot_agepyramide <- function(age = create_data()$age,
 
 
 }
+
 
 
