@@ -10,8 +10,9 @@
 #' @examples
 #' create_data()
 #'
-#' @importFrom stats rnorm runif sample
-#' @importFrom dplyr mutate sample_n
+#' @import dplyr
+#' @importFrom stats runif
+#' @importFrom stats rnorm
 #'
 #' @export
 create_data <- function(n = 100, create_errors = FALSE) {
@@ -49,18 +50,6 @@ create_data <- function(n = 100, create_errors = FALSE) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 #' Plot a population pyramid
 #'
 #' This function creates a population pyramid using the ggplot2 package.
@@ -79,7 +68,6 @@ create_data <- function(n = 100, create_errors = FALSE) {
 #' @import ggplot2
 #' @importFrom dplyr count
 #' @importFrom dplyr mutate
-#' @importFrom stats cut
 #'
 #' @export
 plot_agepyramide <- function(age = create_data()$age,
