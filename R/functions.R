@@ -72,7 +72,7 @@ create_data <- function(n = 100, create_errors = FALSE) {
 #' @export
 plot_agepyramide <- function(age = create_data()$age,
                              sex = create_data()$sex,
-                             group = create_data()$group,
+                             group = NULL,
                              agegroup = TRUE,
                              agegroup_size = 10) {
 
@@ -87,6 +87,25 @@ plot_agepyramide <- function(age = create_data()$age,
     data <- data.frame(age, sex, group) %>%
       count(sex, age)
   }
+
+
+  sex = ifelse(sex %in% c("Male",
+                    "male",
+                    "Männlich",
+                    "männlich",
+                    "Maennlich",
+                    "maennlich",
+                    "M",
+                    "m"), "Male", sex)
+
+    sex = ifelse(sex %in% c("Female",
+                    "female",
+                    "weiblich",
+                    "Weiblich",
+                    "W",
+                    "w",
+                    "F",
+                    "f"), "Female", sex)
 
 
   ggplot(data) +
